@@ -1,0 +1,27 @@
+# LaTeX build artifacts
+
+_.aux
+_.bbl
+_.bcf
+_.blg
+_.log
+_.out
+_.run.xml
+_.synctex.gz
+_.fls
+_.fdb_latexm
+\*.cut
+output/
+
+# Compiled PDF (Overleaf generates its own)
+
+\*.pdf
+
+# Claude internal files
+
+.claude/
+
+# Datatypes
+
+.nd2
+.avi
