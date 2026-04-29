@@ -1,0 +1,69 @@
+\documentclass[11pt, letterpaper]{article}%lineno
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx} % only once
+\usepackage[colorlinks,allcolors=cyan!70!black]{hyperref} % only once
+\usepackage{lipsum}
+\usepackage{soul}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{float} 
+\usepackage{placeins}
+\usepackage{mdframed}
+\usepackage[margin=1in]{geometry}
+\usepackage{caption}
+
+
+\usepackage[T1]{fontenc}
+\renewcommand\familydefault{\sfdefault} 
+\usepackage[scaled]{helvet}
+
+
+
+
+
+\newcommand{\Navish}{\textcolor{red}}
+\newcommand{\revised}{\textcolor{blue}}
+\newcommand{\response}{\textcolor{magenta}}
+
+\title {Response to reviewer comments for the pre-accept submission}
+\author{Meneses et al.}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+
+\section*{Reviewer 1} The authors have satisfactorily addressed my comments. The newly added paragraph on the potential molecular mechanism behind the phenomena is very helpful. I appreciate their effort and believe the revised manuscript is a good fit for Biophysical Journal. Before finalizing their paper, I hope the authors could address the following remaining
+points:
+
+\response{We thank Reviewer 1 for their additional feedback and for recommending our work for publication in Biophysical Journal.}
+
+\begin{itemize}
+    \item Regarding the discrepancy with Ref. 42, the authors suggested that load difference may cause different stator remodeling. But as pointed out in the authors' response to another reviewer the time scale of motor remodeling is much longer than osmotic response, so how would motor remodeling contribute to this process? Also, if the observed osmotic response of BFM is load dependent, the function of BFM as an osmotic stress reporter will be limited. The authors may need to clarify this point a bit further.
+
+    \response{In Ref.~42, the initial motor loads were lower, and the increase in viscosity during osmotic shock may have enabled stator recruitment over the longer time scales of their experiments, potentially explaining why rotation speeds increased beyond pre-shock values. In our experiments, the higher initial load (1.0 $\mu$m bead) likely resulted in near-maximal stator occupancy prior to shock, limiting the capacity for further recruitment and allowing motor speed to more directly reflect PMF changes. However, this explanation remains speculative, and we have removed this point from the Discussion.}
+
+    \item In the new figure for TMRM measurement: Could the authors use this concentration change of TMRM to calculate pmf change based on Nernst relation? This calculation would not change the conclusion but offers more quantitative insight when compared to flagellar motor speed change. Note that cell size decrease during the process should be considered in concentration calculation if the authors chose to do so.
+
+    \response{In principle, changes in TMRM fluorescence could be used to estimate PMF via the Nernst relation, assuming a linear relationship between fluorescence intensity and dye concentration. However, we did not characterize this relationship in our experiments, and so our TMRM measurements serve primarily as a qualitative indicator of PMF dynamics, providing a basis for comparison across shock strengths rather than quantitative PMF estimates. To reflect this, we have added the following sentence to the Discussion:}
+
+\begin{mdframed}
+\footnotesize\revised{``While TMRM fluorescence intensity does not necessarily scale linearly with dye concentration and therefore does not permit precise membrane potential estimates via the Nernst equation, it nevertheless provides a qualitative indicator of PMF dynamics across different osmotic shock strengths.'' (p. 9)}
+\end{mdframed}
+    
+\end{itemize}
+
+\section*{Reviewer 2} I appreciate the authors' careful and thorough corrections and responses to my and the other reviewers' comments. I am satisfied with the changes, and they have addressed my prior concerns appropriately. I am happy to recommend this manuscript for publication in Biophysical Journal.
+
+\response{We thank Reviewer 2 for their constructive feedback and for recommending our work for publication.}
+
+
+\section*{Reviewer 3} The authors have done an excellent job responding to reviewer comments.
+
+\response{We thank Reviewer 3 for their thoughtful feedback and for recommending our work for publication.}
+
+    
+
+\end{document}
