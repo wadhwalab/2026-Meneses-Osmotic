@@ -1,0 +1,23 @@
+Linear Fit Statistics - Total Speed Decrease
+===========================================
+Slope: 0.000953
+Intercept: 0.003246
+R-squared: 0.994435
+P-value: 2.786593e-03
+Standard Error: 0.000050
+
+Linear Fit Statistics - Remaining Speed Decrease
+===============================================
+Slope: 0.000636
+Intercept: -0.075297
+R-squared: 0.982963
+P-value: 8.555186e-03
+Standard Error: 0.000059
+
+Linear Fit Statistics - Viscosity-Only Speed Decrease
+====================================================
+Slope: 0.000316
+Intercept: 0.078542
+R-squared: 0.983888
+P-value: 8.088848e-03
+Standard Error: 0.000029
