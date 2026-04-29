@@ -22,6 +22,6 @@ output/
 .claude/
 
 # Datatypes
-
 .nd2
 .avi
+.DS_Store
