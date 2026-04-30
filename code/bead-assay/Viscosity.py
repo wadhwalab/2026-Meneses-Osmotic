@@ -2,6 +2,9 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
+
+from bead_time_series import ROOT, legacy_condition_folder
 
 
 def calculate_time_to_reach_y_range_and_plot(
@@ -77,13 +80,13 @@ def calculate_time_to_reach_y_range_and_plot(
     print(f"Plot saved to {plot_file}")
 
 
-# Example usage:/Users/luismeneses/Desktop/Vicosity-Sorb
-folder_path = "/Users/luismeneses/Desktop/Viscosity-CW/data/500mM"
+# Example using compact canonical bead time series.
+folder_path = legacy_condition_folder(assay="Clockwise", condition_mM=500)
 y_drop = 0.57
 drop_x = 180
 return_x = 270
-output_file = "/Users/luismeneses/Desktop/time_to_reach_y_range.txt"
-plot_folder = "/Users/luismeneses/Desktop/Viscosity-CW/figures"
+plot_folder = ROOT / "outputs" / "bead" / "viscosity-cw"
+output_file = plot_folder / "time_to_reach_y_range.txt"
 
 calculate_time_to_reach_y_range_and_plot(
     folder_path, y_drop, drop_x, return_x, output_file, plot_folder

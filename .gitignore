@@ -1,28 +1,34 @@
-# LaTeX build artifacts
-
-_.aux
-_.bbl
-_.bcf
-_.blg
-_.log
-_.out
-_.run.xml
-_.synctex.gz
-_.fls
-_.fdb_latexm
-\*.cut
+# Generated analysis outputs
+outputs/
 output/
 
-# Compiled PDF (Overleaf generates its own)
+# Python
+__pycache__/
+*.py[cod]
 
-\*.pdf
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.cut
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+/*.pdf
 
-# Claude internal files
-
+# Local assistant/tooling files
 .claude/
 
-# Datatypes
-.nd2
-.avi
-.DS_Store
+# Raw or legacy bulky data formats
+*.avi
+*.nd2
+*.mat
+*.fig
 *.zip
+
+# OS metadata
+.DS_Store

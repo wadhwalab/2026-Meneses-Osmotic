@@ -2,9 +2,11 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 # ================= USER PARAMETERS =================
-csv_path = "/Volumes/USB/New-nikon/2-11-2026/Analysis_1/csv555_LONG_RatioNorm_Fluor_mean_018_.csv"  # path to output from TMRM_image_analysis
+ROOT = Path(__file__).resolve().parents[2]
+csv_path = ROOT / "data" / "time-series" / "tmrm" / "200mM.csv"
 shock_frame = 35  # <-- SET THIS
 baseline_window = 10  # frames before shock
 frame_interval_s = 5  # seconds per frame
@@ -86,8 +88,9 @@ def plot_dff(df, out_dir):
 
 df = pd.read_csv(csv_path)
 df["time_s"] = df["frame"] * frame_interval_s
-out_dir = os.path.dirname(csv_path) if os.path.dirname(csv_path) else "."
-exp_name = os.path.basename(os.path.normpath(out_dir))
+out_dir = ROOT / "outputs" / "tmrm" / Path(csv_path).stem
+os.makedirs(out_dir, exist_ok=True)
+exp_name = Path(csv_path).stem
 
 df_dff = compute_dff(df, shock_frame, baseline_window)
 

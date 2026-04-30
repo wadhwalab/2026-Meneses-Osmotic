@@ -11,9 +11,12 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
+from pathlib import Path
 
 # ================= USER PARAMETERS =================
-folder_path = r"C:\Users\lemenese\ASU Dropbox\KE-TF Biodesign ME Wadhwa\Wadhwa Lab\Luis_M\Osmotic-shock-motor-response-project-2022-2025\Data\Cell-area\Analysis_combined"  # <--- FOLDER containing all CSVs
+ROOT = Path(__file__).resolve().parents[2]
+folder_path = ROOT / "data" / "time-series" / "cell-area"  # <--- FOLDER containing all CSVs
+output_folder = ROOT / "outputs" / "cell-area"
 shock_frame = 35  # frame index of shock
 baseline_window = 10  # frames before shock for F0
 frame_interval_s = 5  # seconds per frame
@@ -170,7 +173,8 @@ for i, csv_path in enumerate(csv_files):
     df_dff = compute_dff(df, shock_frame, baseline_window)
 
     base_name = os.path.splitext(os.path.basename(csv_path))[0]
-    out_dir = os.path.dirname(csv_path)
+    out_dir = output_folder / "dff"
+    os.makedirs(out_dir, exist_ok=True)
     dff_csv_path = os.path.join(out_dir, f"{base_name}_dff.csv")
     df_dff.to_csv(dff_csv_path, index=False)
 
@@ -181,9 +185,10 @@ for i, csv_path in enumerate(csv_files):
     labels.append(filename_to_label(csv_path))
 
 # name for the combined figure
+os.makedirs(output_folder, exist_ok=True)
 folder_name = os.path.basename(os.path.normpath(folder_path))
 combined_plot_path1 = os.path.join(
-    folder_path, f"{folder_name}_population_dff_multi.pdf"
+    output_folder, f"{folder_name}_population_dff_multi.pdf"
 )
 
 

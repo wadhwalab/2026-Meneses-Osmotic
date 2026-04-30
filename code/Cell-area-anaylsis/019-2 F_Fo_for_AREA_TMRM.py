@@ -9,9 +9,11 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 # ================= USER PARAMETERS =================
-csv_path = r"C:\Users\lemenese\ASU Dropbox\KE-TF Biodesign ME Wadhwa\Wadhwa Lab\Luis_M\Osmotic-shock-motor-response-project-2022-2025\Data\Cell-area\500\Analysis_500_1_2\csv_LONG_Cell_Areas_DoG_Otsu.csv"  # path to output from TMRM_image_analysis
+ROOT = Path(__file__).resolve().parents[2]
+csv_path = ROOT / "data" / "time-series" / "cell-area" / "200mM.csv"
 shock_frame = 35  # <-- SET THIS
 baseline_window = 10  # frames before shock
 frame_interval_s = 5  # seconds per frame
@@ -93,8 +95,9 @@ def plot_dff(df, out_dir):
 
 df = pd.read_csv(csv_path)
 df["time_s"] = df["frame"] * frame_interval_s
-out_dir = os.path.dirname(csv_path) if os.path.dirname(csv_path) else "."
-exp_name = os.path.basename(os.path.normpath(out_dir))
+out_dir = ROOT / "outputs" / "cell-area" / Path(csv_path).stem
+os.makedirs(out_dir, exist_ok=True)
+exp_name = Path(csv_path).stem
 
 df_dff = compute_dff(df, shock_frame, baseline_window)
 

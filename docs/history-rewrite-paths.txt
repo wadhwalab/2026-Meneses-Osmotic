@@ -1,0 +1,24 @@
+# Candidate path patterns for a later git history rewrite
+#
+# These are the legacy/upstream artifacts removed from the working tree during
+# the time-series-first cleanup. A future git-filter-repo or BFG pass can use
+# this list as the starting point for purging historical blobs.
+
+code/bead-assay/Detection.py
+code/bead-assay/Rotfreq.py
+code/TMRM-anaylsis/018_New_Luis4_TWO-CHANNEL_NewEdition.py
+code/TMRM-anaylsis/020_Concatenate_CSVs_in_Folder.py
+code/Cell-area-anaylsis/018-4 New_Luis5_One_Channel_AREA - LONG_CSV.py
+code/Cell-area-anaylsis/021_Concatenate_Area_CSVs_in_Folder.py
+code/dummy.md
+
+data/Bead-assays/
+data/TMRM-results/
+data/Cell-area/
+data/dummy-data.md
+
+*.avi
+*.nd2
+*.mat
+*.fig
+.DS_Store
