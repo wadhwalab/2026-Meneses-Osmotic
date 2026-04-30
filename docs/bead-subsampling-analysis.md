@@ -34,10 +34,10 @@ the manuscript-level conclusions.
 
 | Downstream analysis | Current time handling | Main measured quantities |
 |---|---|---|
-| `sucrose-shock-plotting.ipynb` | 301-point median filter at 300 Hz, then 0.1 s mean bins | Collapse tau, recovery tau, collapse amplitude, population mean traces |
-| `plot-and-curve-fit.ipynb` | Same 0.1 s binned shock workflow for sucrose/sorbitol/sodium/clockwise assays | Collapse tau, recovery tau, amplitude summaries |
-| `adaption-curve-fitting.ipynb` | 301-point median filter, baseline normalization, multi-second fit windows | Population decay tau, single-cell recovery tau, plateau |
-| `Viscosity.py` | Illustrative legacy CSV plotting | No additional high-frequency quantitative endpoint |
+| `sucrose_shock_analysis.ipynb` | 301-point median filter at 300 Hz, then 0.1 s mean bins | Collapse tau, recovery tau, collapse amplitude, population mean traces |
+| `bead_shock_curve_fits.ipynb` | Same 0.1 s binned shock workflow for sucrose/sorbitol/sodium/clockwise assays | Collapse tau, recovery tau, amplitude summaries |
+| `adaptation_curve_fitting.ipynb` | 301-point median filter, baseline normalization, multi-second fit windows | Population decay tau, single-cell recovery tau, plateau |
+| `plot_viscosity_control.py` | Illustrative legacy CSV plotting | No additional high-frequency quantitative endpoint |
 
 Important fit and summary windows:
 

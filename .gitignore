@@ -5,6 +5,10 @@ output/
 # Python
 __pycache__/
 *.py[cod]
+.pytest_cache/
+pytest-cache-files-*/
+.venv/
+.ipynb_checkpoints/
 
 # LaTeX build artifacts
 *.aux

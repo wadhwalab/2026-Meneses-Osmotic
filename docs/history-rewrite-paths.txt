@@ -1,8 +1,9 @@
-# Candidate path patterns for a later git history rewrite
+# Historical cleanup note
 #
-# These are the legacy/upstream artifacts removed from the working tree during
-# the time-series-first cleanup. A future git-filter-repo or BFG pass can use
-# this list as the starting point for purging historical blobs.
+# The working repository is intentionally time-series-first. Upstream image and
+# video processing artifacts are not part of the supported supplement workflow.
+#
+# Legacy path patterns that were excluded from the cleaned working tree include:
 
 code/bead-assay/Detection.py
 code/bead-assay/Rotfreq.py

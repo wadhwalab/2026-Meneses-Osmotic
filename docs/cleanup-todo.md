@@ -1,55 +1,37 @@
-# Cleanup To-Do List
+# Publication-Readiness Notes
 
-## 1. Explore Bead-Assay Subsampling
+This repository is now organized as a lightweight, time-series-first supplement.
+The supported workflow begins with curated time-series data in
+`data/time-series/`.
 
-- Status: evaluated in `docs/bead-subsampling-analysis.md`.
-- Implemented: bead Parquet files now store 0.1 s mean-binned time series.
-- Keep full 300 Hz bead traces outside Git only if future sub-second motor
-  fluctuation analysis is needed.
+## Current Boundary
 
-## 2. Investigate Reducing `.git` Bloat
+- Upstream image/video processing is outside this repository.
+- Raw videos/images, segmentation outputs, bead centroid or center-coordinate
+  tables, MATLAB artifacts, and other large intermediates are not included.
+- Publication figures in `figures/` and manuscript `.tex` files are treated as
+  release artifacts.
 
-- Confirm which historical paths dominate `.git` size.
-- Test `git filter-repo` or BFG on a throwaway clone.
-- Purge removed upstream paths from history.
-- Run `git gc --prune=now --aggressive`.
-- Verify post-rewrite clone size.
-- Decide force-push and archival strategy before changing remote history.
+## Implemented Cleanup
 
-## 3. Validate Bead-Assay Storage Format
+- Bead Parquet files store `0.1 s` mean-binned time series.
+- The bead manifest records `time_bin_s`, `reduction`, and
+  `frame_reference_fps`.
+- Descriptive script and notebook filenames replace the original numbered or
+  ambiguous names.
+- Maintained scripts write generated files to ignored `outputs/` directories.
+- Dependency files and repository integrity tests document the expected runtime
+  environment.
 
-- Parquet is now the canonical working format for time-series data.
-- Keep measuring alternatives only if size or usability becomes a problem:
-  - `.csv.zst`
-  - HDF5
-  - NumPy `.npz`
-  - Feather/Arrow
-- Measure size, read speed, dependency burden, and notebook usability.
-- Decide whether to keep CSV export utilities for collaborators who prefer text files.
+## Useful Checks Before Release
 
-## 4. Run and Test the Full Codebase
+Run these from the repository root:
 
-- Set up a clean environment with required dependencies.
-- Run TMRM scripts.
-- Run cell-area scripts.
-- Run bead notebooks/scripts end to end where possible.
-- Capture expected outputs and failures.
-- Add lightweight smoke tests for key scripts and helpers.
+```bash
+pytest
+python "code/TMRM-anaylsis/analyze_tmrm_population_dff.py"
+python "code/Cell-area-anaylsis/analyze_cell_area_population_dff.py"
+python "code/bead-assay/plot_viscosity_control.py"
+```
 
-## 5. Review Every Code File and Notebook Individually
-
-- Identify each file's purpose, inputs, outputs, and whether it is upstream or downstream.
-- Remove dead code and stale absolute paths.
-- Add short usage notes at the top of each script/notebook.
-- Standardize repo-relative paths.
-- Clear notebook outputs.
-- Document required dependencies.
-- Mark notebooks as maintained, archival, or deprecated.
-
-## 6. Document the Cleaned Workflow
-
-- Update `README.md` with the final analysis path.
-- Add a data layout guide for `data/time-series`.
-- Add a "how to regenerate outputs" section.
-- Add a history-rewrite note and safety checklist.
-- Add expected repo size targets after cleanup.
+Generated outputs should appear only under `outputs/`.
