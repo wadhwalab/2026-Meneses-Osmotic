@@ -1,25 +1,28 @@
-"""Helpers for bead analysis notebooks that now start from compact time series.
+"""Helpers for bead analysis notebooks that start from compact time series.
 
-The canonical bead data live in ``data/time-series/bead`` as compressed wide
-CSV files: one file per assay/condition and one column per trace. The original
-analysis notebooks expect a legacy ``speeds/<condition>/*.csv`` tree. The
-helpers below bridge those two layouts without restoring the bulky upstream
+The canonical bead data live in ``data/time-series/bead`` as 0.1 s mean-binned
+wide Parquet files: one file per assay/condition and one column per trace. The
+original analysis notebooks expect a legacy ``speeds/<condition>/*.csv`` tree.
+The helpers below bridge those two layouts without restoring the bulky upstream
 data directories.
 """
 
 from __future__ import annotations
 
 import csv
-import gzip
 import re
 import shutil
 from pathlib import Path
+
+import pyarrow.parquet as pq
 
 
 ROOT = Path(__file__).resolve().parents[2]
 BEAD_DIR = ROOT / "data" / "time-series" / "bead"
 OUTPUT_ROOT = ROOT / "outputs" / "bead"
 DEFAULT_FPS = 300
+TIME_BIN_S = 0.1
+FRAME_REFERENCE_FPS = 300
 
 
 def _slug(text: str) -> str:
@@ -87,10 +90,17 @@ def _legacy_csv_name(row: dict[str, str]) -> str:
     return f"freq-{_slug(cell_id)}.csv"
 
 
-def _open_csv(path: Path):
-    if path.suffix == ".gz":
-        return gzip.open(path, "rt", newline="")
-    return path.open(newline="")
+def median_kernel_size(time_s, window_s: float = 1.0) -> int:
+    """Return an odd sample count spanning approximately ``window_s`` seconds."""
+    import numpy as np
+
+    time = np.asarray(time_s, dtype=float)
+    dt = np.diff(time[np.isfinite(time)])
+    dt = dt[dt > 0]
+    if len(dt) == 0:
+        return 1
+    size = max(1, int(round(window_s / float(np.median(dt)))))
+    return size if size % 2 == 1 else size + 1
 
 
 def legacy_speed_tree(
@@ -107,6 +117,9 @@ def legacy_speed_tree(
     The returned directory contains condition subfolders such as ``200mM``.
     Files are written as pandas-style two-column CSVs with an index column and a
     column named ``0``, matching the shape used by the original notebooks.
+    The first column stores the original 300 Hz frame reference at each 0.1 s
+    bin midpoint, so older code that computes ``frame / 300`` still gets time
+    in seconds.
     """
     rows = select_manifest(
         assay=assay,
@@ -132,6 +145,9 @@ def legacy_speed_tree(
     for relative_path, path_rows in _group_by_path(rows).items():
         source = ROOT / relative_path
         selected_by_column = {row["column_name"]: row for row in path_rows}
+        table = pq.read_table(source, columns=["frame", *selected_by_column])
+        source_data = table.to_pydict()
+        frames = source_data["frame"]
         handles: dict[str, object] = {}
         writers: dict[str, csv.writer] = {}
         try:
@@ -145,14 +161,11 @@ def legacy_speed_tree(
                 handles[row["column_name"]] = handle
                 writers[row["column_name"]] = writer
 
-            with _open_csv(source) as handle:
-                reader = csv.DictReader(handle)
-                for source_row in reader:
-                    frame = source_row["frame"]
-                    for column_name, row in selected_by_column.items():
-                        value = source_row.get(column_name, "")
-                        if value != "":
-                            writers[column_name].writerow([frame, value])
+            for idx, frame in enumerate(frames):
+                for column_name in selected_by_column:
+                    value = source_data[column_name][idx]
+                    if value is not None:
+                        writers[column_name].writerow([frame, value])
         finally:
             for handle in handles.values():
                 handle.close()
@@ -215,7 +228,7 @@ def iter_condition_traces(
     )
     for relative_path, path_rows in _group_by_path(rows).items():
         source = ROOT / relative_path
-        wide = pd.read_csv(source)
+        wide = pd.read_parquet(source)
         for row in path_rows:
             column = row["column_name"]
             trace = wide[["frame", "time_s", column]].dropna().copy()

@@ -2,10 +2,10 @@
 
 ## 1. Explore Bead-Assay Subsampling
 
-- Determine the minimum temporal resolution needed for downstream fits and plots.
-- Compare full-rate, binned, and downsampled traces.
-- Quantify effects on tau, amplitude, plateau, and population summaries.
-- Decide whether to store full-rate data, reduced data, or both.
+- Status: evaluated in `docs/bead-subsampling-analysis.md`.
+- Implemented: bead Parquet files now store 0.1 s mean-binned time series.
+- Keep full 300 Hz bead traces outside Git only if future sub-second motor
+  fluctuation analysis is needed.
 
 ## 2. Investigate Reducing `.git` Bloat
 
@@ -16,16 +16,16 @@
 - Verify post-rewrite clone size.
 - Decide force-push and archival strategy before changing remote history.
 
-## 3. Evaluate Better Bead-Assay Storage Formats
+## 3. Validate Bead-Assay Storage Format
 
-- Compare current wide `.csv.gz` files against:
+- Parquet is now the canonical working format for time-series data.
+- Keep measuring alternatives only if size or usability becomes a problem:
   - `.csv.zst`
-  - Parquet
   - HDF5
   - NumPy `.npz`
   - Feather/Arrow
 - Measure size, read speed, dependency burden, and notebook usability.
-- Decide the canonical format and whether to keep CSV export utilities.
+- Decide whether to keep CSV export utilities for collaborators who prefer text files.
 
 ## 4. Run and Test the Full Codebase
 

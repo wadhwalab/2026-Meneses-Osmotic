@@ -13,7 +13,7 @@ from pathlib import Path
 
 # ================= USER PARAMETERS =================
 ROOT = Path(__file__).resolve().parents[2]
-csv_path = ROOT / "data" / "time-series" / "cell-area" / "200mM.csv"
+data_path = ROOT / "data" / "time-series" / "cell-area" / "200mM.parquet"
 shock_frame = 35  # <-- SET THIS
 baseline_window = 10  # frames before shock
 frame_interval_s = 5  # seconds per frame
@@ -93,11 +93,11 @@ def plot_dff(df, out_dir):
 
 # ================= MAIN SCRIPT =================
 
-df = pd.read_csv(csv_path)
+df = pd.read_parquet(data_path)
 df["time_s"] = df["frame"] * frame_interval_s
-out_dir = ROOT / "outputs" / "cell-area" / Path(csv_path).stem
+out_dir = ROOT / "outputs" / "cell-area" / Path(data_path).stem
 os.makedirs(out_dir, exist_ok=True)
-exp_name = Path(csv_path).stem
+exp_name = Path(data_path).stem
 
 df_dff = compute_dff(df, shock_frame, baseline_window)
 

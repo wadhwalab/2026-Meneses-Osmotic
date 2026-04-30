@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
-from bead_time_series import ROOT, legacy_condition_folder
+from bead_time_series import ROOT, legacy_condition_folder, read_legacy_speed_csv
 
 
 def calculate_time_to_reach_y_range_and_plot(
@@ -23,26 +23,37 @@ def calculate_time_to_reach_y_range_and_plot(
     for spine in ax.spines.values():
         spine.set_linewidth(2)
 
+    max_time = 380
+    plotted = False
+
     # Loop through all CSV files in the given folder
     for file_name in os.listdir(folder_path):
         if file_name.endswith(".csv"):
             file_path = os.path.join(folder_path, file_name)
             try:
-                df = pd.read_csv(file_path, header=None)
-                df[0] = pd.to_numeric(df[0], errors="coerce")
-                df[1] = pd.to_numeric(df[1], errors="coerce")
-                df = df.dropna(subset=[0, 1])
+                df = read_legacy_speed_csv(file_path)
+                time_s = df["frame"].to_numpy(dtype=float) / 300
+                speed = df["frequency_hz"].to_numpy(dtype=float)
+                baseline = np.nanmean(speed[time_s < drop_x])
+                if not np.isfinite(baseline) or baseline == 0:
+                    continue
+                speed = speed / baseline
+                max_time = max(max_time, float(np.nanmax(time_s)))
                 ax.plot(
-                    df[0],
-                    df[1],
+                    time_s,
+                    speed,
                     label=f"Measured \nmotor speed",
                     color="Red",
                 )
+                plotted = True
             except Exception as e:
                 print(f"Error reading {file_path}: {e}")
 
+    if not plotted:
+        raise FileNotFoundError(f"No usable trace CSV files found in {folder_path}")
+
     # Add the dotted line: constant at 1 before `drop_x` and after `return_x`, with a drop at `y_drop`
-    x_values = [0, drop_x, drop_x, return_x, return_x, max(df[0])]
+    x_values = [0, drop_x, drop_x, return_x, return_x, max_time]
     y_values = [1, 1, y_drop, y_drop, 1, 1]
     ax.plot(
         x_values,

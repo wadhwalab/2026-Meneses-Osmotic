@@ -15,7 +15,7 @@ from pathlib import Path
 
 # ================= USER PARAMETERS =================
 ROOT = Path(__file__).resolve().parents[2]
-folder_path = ROOT / "data" / "time-series" / "cell-area"  # <--- FOLDER containing all CSVs
+folder_path = ROOT / "data" / "time-series" / "cell-area"  # <--- FOLDER containing Parquet inputs
 output_folder = ROOT / "outputs" / "cell-area"
 shock_frame = 35  # frame index of shock
 baseline_window = 10  # frames before shock for F0
@@ -29,7 +29,7 @@ Hi_Lim = 0.10
 # ===================================================
 def filename_to_label(fname):
     """
-    Convert a CSV filename to a human-readable label used in the legend.
+    Convert an input filename to a human-readable label used in the legend.
     Examples:
       '300csv_LONG_Cell_Areas_DoG_Otsu.csv' -> '300 mM'
       'Controlcsv_LONG_Cell_Areas_DoG_Otsu.csv' -> 'Control'
@@ -151,28 +151,27 @@ def plot_multi_population(pop_list, labels, out_path):
 
 # ================= MAIN SCRIPT =================
 
-# find all CSV files in the folder (exclude any *_dff.csv files created by previous runs)
-all_csv = glob.glob(os.path.join(folder_path, "*.csv"))
-csv_files = [f for f in all_csv if not os.path.basename(f).endswith("_dff.csv")]
+# find all Parquet files in the folder
+data_files = glob.glob(os.path.join(folder_path, "*.parquet"))
 
 # Sort: Control first, then increasing concentration
-csv_files = sorted(csv_files, key=sort_key_control_first)
+data_files = sorted(data_files, key=sort_key_control_first)
 
 # sanity checks
-if not csv_files:
-    raise FileNotFoundError(f"No CSV files found in folder: {folder_path}")
+if not data_files:
+    raise FileNotFoundError(f"No Parquet files found in folder: {folder_path}")
 
 pop_list = []
 labels = []
 
-for i, csv_path in enumerate(csv_files):
-    print(f"Processing {csv_path}")
+for i, data_path in enumerate(data_files):
+    print(f"Processing {data_path}")
 
-    df = pd.read_csv(csv_path)
+    df = pd.read_parquet(data_path)
     df["time_s"] = df["frame"] * frame_interval_s
     df_dff = compute_dff(df, shock_frame, baseline_window)
 
-    base_name = os.path.splitext(os.path.basename(csv_path))[0]
+    base_name = os.path.splitext(os.path.basename(data_path))[0]
     out_dir = output_folder / "dff"
     os.makedirs(out_dir, exist_ok=True)
     dff_csv_path = os.path.join(out_dir, f"{base_name}_dff.csv")
@@ -182,7 +181,7 @@ for i, csv_path in enumerate(csv_files):
     pop_list.append(pop)
 
     # <-- manual legend label here
-    labels.append(filename_to_label(csv_path))
+    labels.append(filename_to_label(data_path))
 
 # name for the combined figure
 os.makedirs(output_folder, exist_ok=True)

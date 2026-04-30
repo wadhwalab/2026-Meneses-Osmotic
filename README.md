@@ -15,10 +15,9 @@ part of the working tree.
 ```text
 .
 ├── code/
-│   ├── curate_time_series.py    # one-time legacy-to-canonical migration script
 │   ├── TMRM-anaylsis/           # restored downstream TMRM post-analysis scripts
 │   ├── Cell-area-anaylsis/      # restored downstream area post-analysis scripts
-│   └── bead-assay/              # restored bead plotting/fitting notebooks
+│   └── bead-assay/              # bead plotting/fitting notebooks and helpers
 ├── data/
 │   ├── time-series/
 │   │   ├── bead/                # bead/tethered-cell motor frequency traces
@@ -36,24 +35,33 @@ Generated analysis products are written to `outputs/`, which is ignored by Git.
 
 ## Canonical Data Inputs
 
-The downstream analysis starts from these CSV schemas:
+The downstream analysis starts from these Parquet schemas:
 
 | Pipeline | Location | Required columns |
 |---|---|---|
-| Bead / tethered-cell motor speed | `data/time-series/bead/*.csv.gz` | `frame`, `time_s`, plus one column per trace |
-| Bead trace manifest | `data/time-series/bead/manifest.csv` | `path`, `column_name`, `assay`, `osmolyte`, `condition_mM`, `cell_id`, `rotation_direction`, `fps`, `source_kind`, `source_path`, `sign_adjustment` |
-| TMRM fluorescence | `data/time-series/tmrm/*.csv` | `track_id`, `frame`, `fluorescence` |
-| Cell area | `data/time-series/cell-area/*.csv` | `track_id`, `frame`, `area` |
+| Bead / tethered-cell motor speed | `data/time-series/bead/*.parquet` | `frame`, `time_s`, plus one column per trace |
+| Bead trace manifest | `data/time-series/bead/manifest.csv` | `path`, `column_name`, `assay`, `osmolyte`, `condition_mM`, `cell_id`, `rotation_direction`, `fps`, `source_kind`, `source_path`, `sign_adjustment`, `time_bin_s`, `reduction`, `frame_reference_fps` |
+| TMRM fluorescence | `data/time-series/tmrm/*.parquet` | `track_id`, `frame`, `fluorescence` |
+| Cell area | `data/time-series/cell-area/*.parquet` | `track_id`, `frame`, `area` |
 
-Each bead file is a compressed wide table for one assay/condition. The bead
-manifest maps each trace to its `column_name` inside that file and includes the
-legacy source path used during curation, so the data lineage remains visible
-even though upstream folders are removed from the working tree.
+Each bead file is a compressed wide table for one assay/condition. Bead traces
+are stored as `0.1 s` mean-binned time series, which matches the resolution used
+by the downstream shock-analysis notebooks. The `time_s` column is the
+authoritative time axis. The `frame` column stores the original `300 Hz` frame
+reference at each bin midpoint so older notebook cells that compute
+`frame / 300` still recover time in seconds.
+
+The small CSV manifest maps each trace to its `column_name` inside that file
+and includes the legacy source path used during curation, so the data lineage
+remains visible even though upstream folders are removed from the working tree.
+See `docs/bead-subsampling-analysis.md` for the binning validation and
+post-conversion fidelity checks.
 
 ## Running Analysis
 
 Use Python 3 with the scientific Python stack used by the original analysis
-scripts (`numpy`, `pandas`, and `matplotlib`).
+scripts (`numpy`, `pandas`, `matplotlib`, and `pyarrow` for Parquet).
+Some bead notebooks also use `scipy`, `seaborn`, and `scikit-learn`.
 
 ```bash
 python "code/TMRM-anaylsis/021_MergeMultiDFF.py"
@@ -69,10 +77,12 @@ Outputs:
 
 The restored bead notebooks remain under `code/bead-assay/` and start from
 motor-frequency time-series, not raw bead-center detection. They use
-`code/bead-assay/bead_time_series.py` to read the compact wide CSV files in
+`code/bead-assay/bead_time_series.py` to read the compact wide Parquet files in
 `data/time-series/bead/`. When an older notebook cell still expects a legacy
 `speeds/<condition>/*.csv` tree, the helper materializes that tree under
-`outputs/bead/legacy-speed-tree/` from the compressed canonical inputs.
+`outputs/bead/legacy-speed-tree/` from the canonical Parquet inputs.
+The helper also provides a time-aware median-filter kernel so a 1 s smoothing
+window remains 1 s after the bead data reduction.
 
 ## Analysis Parameters
 
