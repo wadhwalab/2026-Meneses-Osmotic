@@ -1,0 +1,6 @@
+condition,source_file,n_cells,time_step_s,shock_start_s,shock_window_used_s,minimum_mean_change_during_shock,time_of_minimum_s,mean_change_during_shock,mean_change_after_recovery_300_380_s
+control,data/time-series/cell-area/control.parquet,40,5,175,180-265,-0.005768,260.0,3.6e-05,0.000262
+200 mM,data/time-series/cell-area/200mM.parquet,40,5,175,180-265,-0.119935,220.0,-0.077107,-0.020967
+300 mM,data/time-series/cell-area/300mM.parquet,40,5,175,180-265,-0.120608,255.0,-0.100716,-0.009355
+400 mM,data/time-series/cell-area/400mM.parquet,40,5,175,180-265,-0.149982,250.0,-0.105433,0.000736
+500 mM,data/time-series/cell-area/500mM.parquet,40,5,175,180-265,-0.149904,265.0,-0.111384,-0.014936
