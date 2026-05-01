@@ -6,13 +6,13 @@ Cells must keep an electrochemical energy gradient across their membrane. In
 bacteria this gradient is called the proton motive force, or PMF. PMF powers ATP
 synthesis, flagellar motility, transport, and other essential processes.
 
-This study asks what happens to PMF in *E. coli* during the first seconds and
+This study asks what happens to PMF in _E. coli_ during the first seconds and
 minutes after hyperosmotic shock: a sudden increase in external solute
 concentration.
 
-## Why *E. coli*
+## Why _E. coli_
 
-*E. coli* is a well-studied bacterial model with powerful genetics, robust
+_E. coli_ is a well-studied bacterial model with powerful genetics, robust
 growth, and a deeply characterized flagellar motor. It is small enough that
 traditional electrical recordings are difficult, but its motor gives a useful
 physical readout of membrane energy in living cells.
@@ -69,6 +69,6 @@ supporting the conclusion that PMF decreases during shock.
 
 ## Main Interpretation
 
-Hyperosmotic shock rapidly depolarizes *E. coli*. The flagellar motor detects
+Hyperosmotic shock rapidly depolarizes _E. coli_. The flagellar motor detects
 this as a fast motor-speed decrease, TMRM supports the membrane-potential
 interpretation, and longer recordings show partial recovery as cells adapt.
