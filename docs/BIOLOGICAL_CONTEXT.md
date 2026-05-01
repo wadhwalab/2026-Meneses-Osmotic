@@ -2,13 +2,9 @@
 
 ## The Biological Question
 
-Cells must keep an electrochemical energy gradient across their membrane. In
-bacteria this gradient is called the proton motive force, or PMF. PMF powers ATP
-synthesis, flagellar motility, transport, and other essential processes.
+Cells use electrochemical gradients across their membranes to power essential biological process. In bacteria this gradient is called the proton-motive force(PMF). PMF powers ATP synthesis, flagellar motility, transport, and other essential processes.
 
-This study asks what happens to PMF in _E. coli_ during the first seconds and
-minutes after hyperosmotic shock: a sudden increase in external solute
-concentration.
+This study uses _E. coli_ as a model organism to invesitage how the PMF responds to a hyperomsotic shock.
 
 ## Why _E. coli_
 
