@@ -2,66 +2,89 @@
 
 **Meneses, Javi, Dudebout, Belser, Yang & Wadhwa (2026)**
 
-This repository is the data and code supplement for the osmotic-shock PMF
-study. It is organized as a lightweight, time-series-first workflow: readers can
-inspect the curated data, rerun the downstream analysis scripts, and compare
-generated outputs with the publication figures.
+This repository is the data and code supplement for a study of how *E. coli*
+responds immediately after a sudden increase in external osmolarity. The central
+finding is that hyperosmotic shock causes a fast, reversible drop in proton
+motive force (PMF), the membrane-energy gradient that powers bacterial motility
+and other essential processes. The bacterial flagellar motor reports this drop
+as a rapid slowdown, and TMRM fluorescence provides an independent check that
+the membrane potential falls during the same stress.
 
-The manuscript text and files under `figures/` are release artifacts and are not
-part of the cleanup workflow. Generated analysis products are written to
-`outputs/`, which is ignored by Git.
+The repository is organized so that a reader can inspect curated data, open
+pre-generated results, and rerun the maintained analysis scripts. It starts from
+processed time-series data rather than raw videos or microscope image stacks.
 
-## Data Boundary
+## Where To Start
 
-This repository intentionally starts after upstream image and video processing.
-It does not include raw videos/images, upstream acquisition files, segmentation
-outputs, bead centroid or center-coordinate tables, intermediate rotation
-frequency files, MATLAB figure artifacts, or other large processing
-intermediates.
+- [Biological context](docs/BIOLOGICAL_CONTEXT.md): the plain-language story of
+  the organism, assays, controls, and main biological interpretation.
+- [How to read the data](docs/HOW_TO_READ_DATA.md): what each column means,
+  what units are used, and how raw measurements were normalized.
+- [Figures at a glance](docs/FIGURES_AT_A_GLANCE.md): which data and code
+  support each main and supplemental figure.
+- [Repository map](docs/REPOSITORY_MAP.md): what each folder contains and why it
+  exists.
+- [Glossary](docs/GLOSSARY.md): definitions of PMF, TMRM, osmolyte, tau, DFF,
+  viscosity correction, and other technical terms.
+- [Rerun guide](docs/RERUN_GUIDE.md): step-by-step instructions for installing
+  dependencies and regenerating maintained outputs.
+- [Outputs guide](outputs/README.md): code-generated figure panels and summary
+  tables generated from the curated data.
 
-The supported analysis workflow starts from the curated time-series data in
-`data/time-series/`.
+The manuscript files and everything under `figures/` are paper/reference
+artifacts. They should be treated as read-only and should not be edited as part
+of accessibility cleanup or analysis reruns.
 
-## Repository Structure
+## Repository Roadmap
 
 ```text
 .
-├── code/
-│   ├── TMRM-anaylsis/           # downstream TMRM analysis scripts
-│   ├── Cell-area-anaylsis/      # downstream cell-area analysis scripts
-│   └── bead-assay/              # bead assay notebooks, plotting scripts, helpers
-├── data/
-│   ├── time-series/
-│   │   ├── bead/                # bead/tethered-cell motor frequency traces
-│   │   ├── tmrm/                # curated TMRM fluorescence traces
-│   │   └── cell-area/           # curated cell-area traces
-│   ├── Osmolarity-readings/
-│   └── Viscosity/
-├── docs/                        # cleanup and data-reduction notes
-├── figures/                     # publication figure artifacts
-├── manuscript.tex
-├── Supporting_Information.tex
-└── REFERENCES.bib
+├── code/                 # Python scripts and bead-analysis notebooks
+├── data/                 # Curated time-series and supporting spreadsheet data
+├── docs/                 # Plain-English guides and technical cleanup notes
+├── figures/              # Untouched publication figure artifacts
+├── outputs/              # Committed reader-facing outputs and regenerated results
+├── tests/                # Repository integrity checks
+├── manuscript.tex        # Manuscript source; reference only
+├── main.tex              # Manuscript source; reference only
+└── Supporting_Information.tex
 ```
 
-The folder names `TMRM-anaylsis` and `Cell-area-anaylsis` are retained to avoid
-unnecessary path churn, but the scripts inside them now use descriptive names.
+The data workflow begins at `data/time-series/`. Upstream image/video
+processing, bead-center detection, segmentation outputs, MATLAB figure files,
+and large acquisition files are outside the supported supplement workflow.
 
-## Setup
+## Main Data Types
+
+| Data type | Location | Biological meaning |
+|---|---|---|
+| Bead / tethered-cell motor speed | `data/time-series/bead/*.parquet` | Rotation of a bead attached to a flagellar motor, used as a fast readout of PMF. |
+| Bead trace manifest | `data/time-series/bead/manifest.csv` | Metadata linking each single-cell trace to assay type, osmolyte, shock concentration, and rotation direction. |
+| TMRM fluorescence | `data/time-series/tmrm/*.parquet` | Fluorescent membrane-potential readout used to confirm depolarization. |
+| Cell area | `data/time-series/cell-area/*.parquet` | Cell-size change during osmotic shock, used as physical context for shrinkage and recovery. |
+| Osmolarity and viscosity support data | `data/Osmolarity-readings/`, `data/Viscosity/` | Measurements/calculations used to compare motor slowdown with osmotic strength and fluid viscosity. |
+
+Parquet is the canonical machine-readable format for curated time-series data.
+It is compact and preserves numeric tables well, but it usually requires Python,
+R, or another data tool to open. For quick inspection without programming, see
+the summaries under `outputs/key-results/`.
+
+## Setup For Rerunning Analyses
 
 Using `pip`:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-On Windows PowerShell, activate the environment with:
+On Windows PowerShell:
 
 ```powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 Using Conda or Mamba:
@@ -71,24 +94,7 @@ conda env create -f environment.yml
 conda activate meneses-osmotic
 ```
 
-## Canonical Inputs
-
-| Pipeline | Location | Required columns |
-|---|---|---|
-| Bead / tethered-cell motor speed | `data/time-series/bead/*.parquet` | `frame`, `time_s`, plus one column per trace |
-| Bead trace manifest | `data/time-series/bead/manifest.csv` | `path`, `column_name`, `assay`, `osmolyte`, `condition_mM`, `cell_id`, `rotation_direction`, `fps`, `source_kind`, `source_path`, `sign_adjustment`, `time_bin_s`, `reduction`, `frame_reference_fps` |
-| TMRM fluorescence | `data/time-series/tmrm/*.parquet` | `track_id`, `frame`, `fluorescence` |
-| Cell area | `data/time-series/cell-area/*.parquet` | `track_id`, `frame`, `area` |
-
-Bead traces are stored as `0.1 s` mean-binned time series. The `time_s` column
-is the canonical time axis. The `frame` column preserves the original `300 Hz`
-frame reference at each bin midpoint, so older analysis cells that compute
-`frame / 300` still recover time in seconds.
-
-See `docs/bead-subsampling-analysis.md` for the binning validation and fidelity
-checks.
-
-## Running The Maintained Scripts
+## Maintained Scripts
 
 Run the population analyses:
 
@@ -110,16 +116,14 @@ Run the bead viscosity-control plotting example:
 python "code/bead-assay/plot_viscosity_control.py"
 ```
 
-Outputs are written under:
+Generated products are written under `outputs/`. The existing analysis folders
+there are preserved:
 
 - `outputs/tmrm/`
 - `outputs/cell-area/`
 - `outputs/bead/`
-
-The bead notebooks use `code/bead-assay/bead_time_series.py` to read the compact
-wide Parquet files. When older notebook logic expects a legacy
-`speeds/<condition>/*.csv` tree, the helper materializes that tree under
-`outputs/bead/legacy-speed-tree/` from the canonical Parquet inputs.
+- `outputs/figure-panels/`
+- `outputs/key-results/`
 
 ## Notebooks
 
@@ -135,12 +139,13 @@ the committed time-series data.
 
 ## Validation
 
-Run the repository integrity checks with:
+Run the repository integrity checks with the same Python environment used for
+the analysis dependencies:
 
 ```bash
-pytest
+python -m pytest tests
 ```
 
 The tests check time-series schemas, bead manifest consistency, bead binning
-metadata, renamed supported filenames, and the absence of hard-coded local
-absolute paths in supported code and notebooks.
+metadata, supported filenames, and the absence of hard-coded local absolute
+paths in supported code, notebooks, and documentation.

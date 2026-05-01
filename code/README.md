@@ -5,7 +5,8 @@ The code in this directory starts from curated time-series data in
 detection, and raw acquisition data are outside the supported workflow for this
 repository.
 
-Generated files should go to `outputs/`, which is ignored by Git.
+Generated files should go to `outputs/`, which is now committed as the
+reader-facing results layer.
 
 ## TMRM Analysis
 
@@ -13,9 +14,10 @@ Folder: `code/TMRM-anaylsis/`
 
 - `analyze_tmrm_population_dff.py` reads all curated TMRM Parquet files,
   computes per-track DeltaF/F0 values, writes per-condition CSVs, and saves a
-  population plot under `outputs/tmrm/`.
+  population panel under `outputs/figure-panels/`.
 - `analyze_tmrm_single_condition_dff.py` runs the same normalization and basic
-  plotting for one condition file.
+  CSV export for one condition file. Diagnostic plots are optional and are only
+  written when `--figure-dir` is supplied.
 
 Inputs: `data/time-series/tmrm/*.parquet` with `track_id`, `frame`, and
 `fluorescence`.
@@ -26,9 +28,10 @@ Folder: `code/Cell-area-anaylsis/`
 
 - `analyze_cell_area_population_dff.py` reads all curated cell-area Parquet
   files, computes per-track DeltaA/A0 values, writes per-condition CSVs, and
-  saves a population plot under `outputs/cell-area/`.
+  saves a population panel under `outputs/figure-panels/`.
 - `analyze_cell_area_single_condition_dff.py` runs the same normalization and
-  basic plotting for one condition file.
+  CSV export for one condition file. Diagnostic plots are optional and are only
+  written when `--figure-dir` is supplied.
 
 Inputs: `data/time-series/cell-area/*.parquet` with `track_id`, `frame`, and
 `area`.
