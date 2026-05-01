@@ -5,8 +5,8 @@ Supported input:
 
 Generated output:
     outputs/cell-area/<condition>/cell_detections_dff.csv
-    outputs/cell-area/<condition>/single_cell_dff_traces.png
-    outputs/cell-area/<condition>/population_dff_mean_sem.png
+
+Optional diagnostic plots are saved only when --figure-dir is provided.
 
 The upstream image segmentation workflow is not included in this repository.
 This script starts from the curated time-series tables committed under
@@ -29,6 +29,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT_FILE = ROOT / "data" / "time-series" / "cell-area" / "200mM.parquet"
 DEFAULT_OUTPUT_ROOT = ROOT / "outputs" / "cell-area"
+DEFAULT_FIGURE_DIR = None
 DEFAULT_SHOCK_FRAME = 35
 DEFAULT_BASELINE_WINDOW = 10
 DEFAULT_FRAME_INTERVAL_S = 5
@@ -45,6 +46,7 @@ def compute_dff(
 
     for _track_id, group in df.groupby("track_id"):
         group = group.sort_values("frame")
+        # Compare each cell with its own size just before osmotic shock.
         baseline = group[
             (group["frame"] < shock_frame)
             & (group["frame"] >= shock_frame - baseline_window)
@@ -53,6 +55,7 @@ def compute_dff(
             continue
 
         f0 = baseline["area"].mean()
+        # Negative values mean the segmented cell area became smaller.
         df.loc[group.index, "dff"] = (group["area"] - f0) / f0
 
     return df
@@ -60,12 +63,12 @@ def compute_dff(
 
 def plot_dff(
     df: pd.DataFrame,
-    out_dir: Path,
+    figure_dir: Path,
     exp_name: str,
     y_limits: tuple[float, float],
 ) -> None:
     """Save single-cell and population DeltaA/A0 plots."""
-    out_dir.mkdir(parents=True, exist_ok=True)
+    figure_dir.mkdir(parents=True, exist_ok=True)
 
     plt.figure()
     for track_id, group in df.groupby("track_id"):
@@ -78,7 +81,7 @@ def plot_dff(
     plt.title(f"{exp_name} - Single-cell DeltaA/A0 traces")
     plt.ylim(*y_limits)
     plt.tight_layout()
-    plt.savefig(out_dir / "single_cell_dff_traces.png", dpi=300)
+    plt.savefig(figure_dir / f"supplement-cell-area-{exp_name}-single-cell.pdf")
     plt.close()
 
     pop = df.groupby("time_s")["dff"].agg(["mean", "sem"]).reset_index()
@@ -96,13 +99,14 @@ def plot_dff(
     plt.title(f"{exp_name} - Population DeltaA/A0 (mean +/- SEM)")
     plt.ylim(*y_limits)
     plt.tight_layout()
-    plt.savefig(out_dir / "population_dff_mean_sem.png", dpi=300)
+    plt.savefig(figure_dir / f"supplement-cell-area-{exp_name}-population.pdf")
     plt.close()
 
 
 def run_analysis(
     input_file: Path,
     output_root: Path,
+    figure_dir: Path | None,
     shock_frame: int,
     baseline_window: int,
     frame_interval_s: float,
@@ -116,7 +120,8 @@ def run_analysis(
 
     df_dff = compute_dff(df, shock_frame, baseline_window)
     df_dff.to_csv(out_dir / "cell_detections_dff.csv", index=False)
-    plot_dff(df_dff, out_dir, exp_name, y_limits)
+    if figure_dir is not None:
+        plot_dff(df_dff, figure_dir, exp_name, y_limits)
 
     print("Cell-area DeltaA/A0 analysis complete.")
     print(f"Outputs saved in: {out_dir}")
@@ -126,6 +131,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-file", type=Path, default=DEFAULT_INPUT_FILE)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
+    parser.add_argument(
+        "--figure-dir",
+        type=Path,
+        default=DEFAULT_FIGURE_DIR,
+        help="Optional folder for diagnostic PDF plots. If omitted, only CSV output is written.",
+    )
     parser.add_argument("--shock-frame", type=int, default=DEFAULT_SHOCK_FRAME)
     parser.add_argument("--baseline-window", type=int, default=DEFAULT_BASELINE_WINDOW)
     parser.add_argument("--frame-interval-s", type=float, default=DEFAULT_FRAME_INTERVAL_S)
@@ -139,6 +150,7 @@ def main() -> None:
     run_analysis(
         input_file=args.input_file,
         output_root=args.output_root,
+        figure_dir=args.figure_dir,
         shock_frame=args.shock_frame,
         baseline_window=args.baseline_window,
         frame_interval_s=args.frame_interval_s,

@@ -5,7 +5,7 @@ Supported input:
 
 Generated output:
     outputs/tmrm/dff/*_dff.csv
-    outputs/tmrm/tmrm_population_dff_multi.pdf
+    outputs/figure-panels/figure-2b-tmrm-population.pdf
 
 The upstream image segmentation and fluorescence extraction workflow is not
 included in this repository. This script starts from the curated time-series
@@ -30,6 +30,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT_DIR = ROOT / "data" / "time-series" / "tmrm"
 DEFAULT_OUTPUT_DIR = ROOT / "outputs" / "tmrm"
+DEFAULT_FIGURE_DIR = ROOT / "outputs" / "figure-panels"
+DEFAULT_FIGURE_NAME = "figure-2b-tmrm-population.pdf"
 DEFAULT_SHOCK_FRAME = 35
 DEFAULT_BASELINE_WINDOW = 10
 DEFAULT_FRAME_INTERVAL_S = 5
@@ -70,6 +72,7 @@ def compute_dff(
 
     for _track_id, group in df.groupby("track_id"):
         group = group.sort_values("frame")
+        # Use each cell's own pre-shock fluorescence as its reference point.
         baseline = group[
             (group["frame"] < shock_frame)
             & (group["frame"] >= shock_frame - baseline_window)
@@ -78,6 +81,8 @@ def compute_dff(
             continue
 
         f0 = baseline["fluorescence"].mean()
+        # The input is already a cell/background ratio near 1, so normalize
+        # the shock response relative to the signal above background.
         df.loc[group.index, "dff"] = (group["fluorescence"] - f0) / (f0 - 1)
 
     return df
@@ -116,7 +121,7 @@ def plot_multi_population(
 
     ax.axvspan(180, 265, color="lightgray", alpha=0.6)
     ax.set_xlabel("Time (s)", fontsize=25)
-    ax.set_ylabel("DeltaF/F0", fontsize=25)
+    ax.set_ylabel("ΔF/F₀", fontsize=25)
     ticks = np.arange(-0.20, 0.10, 0.05)
     ax.set_yticks(ticks[:-1])
     ax.set_ylim(-0.20, 0.04)
@@ -132,6 +137,8 @@ def plot_multi_population(
 def run_analysis(
     input_dir: Path,
     output_dir: Path,
+    figure_dir: Path,
+    figure_name: str,
     shock_frame: int,
     baseline_window: int,
     frame_interval_s: float,
@@ -156,7 +163,8 @@ def run_analysis(
         labels.append(filename_to_label(data_path))
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    combined_plot_path = output_dir / f"{input_dir.name}_population_dff_multi.pdf"
+    figure_dir.mkdir(parents=True, exist_ok=True)
+    combined_plot_path = figure_dir / figure_name
     plot_multi_population(pop_list, labels, combined_plot_path)
 
     print("TMRM DeltaF/F0 multi-file analysis complete.")
@@ -168,6 +176,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-dir", type=Path, default=DEFAULT_INPUT_DIR)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--figure-dir", type=Path, default=DEFAULT_FIGURE_DIR)
+    parser.add_argument("--figure-name", default=DEFAULT_FIGURE_NAME)
     parser.add_argument("--shock-frame", type=int, default=DEFAULT_SHOCK_FRAME)
     parser.add_argument("--baseline-window", type=int, default=DEFAULT_BASELINE_WINDOW)
     parser.add_argument("--frame-interval-s", type=float, default=DEFAULT_FRAME_INTERVAL_S)
@@ -179,6 +189,8 @@ def main() -> None:
     run_analysis(
         input_dir=args.input_dir,
         output_dir=args.output_dir,
+        figure_dir=args.figure_dir,
+        figure_name=args.figure_name,
         shock_frame=args.shock_frame,
         baseline_window=args.baseline_window,
         frame_interval_s=args.frame_interval_s,

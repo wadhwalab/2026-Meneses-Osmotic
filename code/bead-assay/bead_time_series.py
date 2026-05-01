@@ -114,6 +114,10 @@ def legacy_speed_tree(
 ) -> Path:
     """Materialize a legacy per-trace speed tree from compact canonical inputs.
 
+    This is a compatibility bridge for older notebook cells. It does not restore
+    raw bead tracking files; it only rewrites the curated Parquet traces into the
+    two-column CSV shape those cells expect.
+
     The returned directory contains condition subfolders such as ``200mM``.
     Files are written as pandas-style two-column CSVs with an index column and a
     column named ``0``, matching the shape used by the original notebooks.

@@ -4,7 +4,7 @@ Supported input:
     data/time-series/bead/*.parquet, materialized through bead_time_series.py
 
 Generated output:
-    outputs/bead/viscosity-cw/plot.pdf
+    outputs/figure-panels/supplement-clockwise-viscosity-control.pdf
     outputs/bead/viscosity-cw/time_to_reach_y_range.txt
 
 The upstream bead tracking and rotation-frequency extraction workflow is not
@@ -27,6 +27,8 @@ from bead_time_series import ROOT, legacy_condition_folder, read_legacy_speed_cs
 
 
 DEFAULT_OUTPUT_DIR = ROOT / "outputs" / "bead" / "viscosity-cw"
+DEFAULT_FIGURE_DIR = ROOT / "outputs" / "figure-panels"
+DEFAULT_FIGURE_NAME = "supplement-clockwise-viscosity-control.pdf"
 
 
 def calculate_time_to_reach_y_range_and_plot(
@@ -35,10 +37,9 @@ def calculate_time_to_reach_y_range_and_plot(
     drop_x: float,
     return_x: float,
     output_file: Path,
-    plot_folder: Path,
+    plot_file: Path,
 ) -> None:
-    plot_folder.mkdir(parents=True, exist_ok=True)
-    plot_file = plot_folder / "plot.pdf"
+    plot_file.parent.mkdir(parents=True, exist_ok=True)
 
     plt.figure(figsize=(10, 5.5))
     ax = plt.gca()
@@ -69,6 +70,8 @@ def calculate_time_to_reach_y_range_and_plot(
     if not plotted:
         raise FileNotFoundError(f"No usable trace CSV files found in {folder_path}")
 
+    # This dashed reference is the motor speed expected if viscosity were the
+    # only reason the bead slowed down during the shock.
     x_values = [0, drop_x, drop_x, return_x, return_x, max_time]
     y_values = [1, 1, y_drop, y_drop, 1, 1]
     ax.plot(
@@ -112,6 +115,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--drop-x", type=float, default=180)
     parser.add_argument("--return-x", type=float, default=270)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--figure-dir", type=Path, default=DEFAULT_FIGURE_DIR)
+    parser.add_argument("--figure-name", default=DEFAULT_FIGURE_NAME)
     parser.add_argument("--show", action="store_true", help="Display the plot window.")
     return parser
 
@@ -128,7 +133,7 @@ def main() -> None:
         drop_x=args.drop_x,
         return_x=args.return_x,
         output_file=output_file,
-        plot_folder=args.output_dir,
+        plot_file=args.figure_dir / args.figure_name,
     )
     if args.show:
         plt.show()
