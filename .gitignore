@@ -1,5 +1,9 @@
-# Generated analysis outputs
-outputs/
+# Generated analysis intermediaries except key results and plots
+outputs/bead
+outputs/cell-area
+outputs/tmrm
+
+# Generated LaTeX outputs
 output/
 
 # Python
