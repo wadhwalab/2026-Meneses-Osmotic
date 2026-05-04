@@ -60,7 +60,11 @@ These files show baseline-normalized cell-area changes during osmotic shock.
 ## 4. Regenerate A Bead Viscosity-Control Output
 
 ```bash
-python "code/bead-assay/plot_viscosity_control.py"
+python "code/bead-assay/plot_viscosity_control.py" \
+    --assay Clockwise \
+    --condition-mm 500 \
+    --output-dir outputs/bead/viscosity-cw \
+    --figure-name supplement-clockwise-viscosity-control.pdf
 ```
 
 Expected outputs:
