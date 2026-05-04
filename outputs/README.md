@@ -5,7 +5,7 @@ code-generated figure panels, compact summaries, and processed tables that help
 readers understand the paper without starting from raw code.
 
 The canonical data remain in `data/`. Files in `outputs/` are derived from those
-data. Figure files in this folder should be code-generated panels, not copied
+data. Figure files in this folder are code-generated panels, not copied
 or rendered versions of the polished manuscript figures.
 
 ## Folders
