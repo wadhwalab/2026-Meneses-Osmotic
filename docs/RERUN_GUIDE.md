@@ -60,19 +60,15 @@ These files show baseline-normalized cell-area changes during osmotic shock.
 ## 4. Regenerate A Bead Viscosity-Control Output
 
 ```bash
-python "code/bead-assay/plot_viscosity_control.py" \
-    --assay Clockwise \
-    --condition-mm 500 \
-    --output-dir outputs/bead/viscosity-cw \
-    --figure-name supplement-clockwise-viscosity-control.pdf
+python "code/bead-assay/plot_viscosity_control.py"
 ```
 
 Expected outputs:
 
-- `outputs/figure-panels/supplement-clockwise-viscosity-control.pdf`
-- `outputs/bead/viscosity-cw/time_to_reach_y_range.txt`
+- `outputs/figure-panels/supplement-sorbitol-viscosity.pdf`
+- `outputs/bead/viscosity-sorb/time_to_reach_y_range.txt`
 
-This plot compares measured clockwise motor speed with a simple viscosity-only
+This plot compares measured sorbitol motor speed with a simple viscosity-only
 prediction.
 
 ## 5. Regenerate Bead Motor-Speed Figure Panels
