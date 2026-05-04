@@ -65,10 +65,10 @@ python "code/bead-assay/plot_viscosity_control.py"
 
 Expected outputs:
 
-- `outputs/figure-panels/supplement-clockwise-viscosity-control.pdf`
-- `outputs/bead/viscosity-cw/time_to_reach_y_range.txt`
+- `outputs/figure-panels/supplement-sorbitol-viscosity.pdf`
+- `outputs/bead/viscosity-sorb/time_to_reach_y_range.txt`
 
-This plot compares measured clockwise motor speed with a simple viscosity-only
+This plot compares measured sorbitol motor speed with a simple viscosity-only
 prediction.
 
 ## 5. Regenerate Bead Motor-Speed Figure Panels
