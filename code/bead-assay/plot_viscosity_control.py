@@ -15,6 +15,7 @@ time-series tables committed under data/time-series/bead.
 from __future__ import annotations
 
 import argparse
+import warnings
 from pathlib import Path
 
 import matplotlib
@@ -95,15 +96,13 @@ def calculate_time_to_reach_y_range_and_plot(
     # Stack traces into a 2D matrix: rows = cells/traces, columns = time points.
     matrix = np.vstack(normalized)
 
-    # Compute mean and standard error at each time point (ignoring NaN values).
-    mean = np.nanmean(matrix, axis=0)
-    sem = np.nanstd(matrix, axis=0) / np.sqrt(np.sum(np.isfinite(matrix), axis=0))
+    # Compute mean at each time point (ignoring NaN values).
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        mean = np.nanmean(matrix, axis=0)
 
     # Plot measured mean normalized speed.
     ax.plot(common_time, mean, color="Blue", linewidth=1, label="Measured \nmotor speed")
-
-    # Optional uncertainty band (currently off to keep visual cleaner).
-    # ax.fill_between(common_time, mean - sem, mean + sem, color="Blue", alpha=0.3)
 
     # This dashed reference is the motor speed expected if viscosity were the
     # only reason the bead slowed down during the shock.

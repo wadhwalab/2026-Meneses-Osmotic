@@ -1,6 +1,6 @@
 condition,source_file,n_cells,time_step_s,shock_start_s,shock_window_used_s,minimum_mean_change_during_shock,time_of_minimum_s,mean_change_during_shock,mean_change_after_recovery_300_380_s
-control,data/time-series/tmrm/control.parquet,40,5,175,180-265,-0.008366,260.0,0.000587,0.00506
-200 mM,data/time-series/tmrm/200mM.parquet,40,5,175,180-265,-0.064102,215.0,-0.052921,0.001083
-300 mM,data/time-series/tmrm/300mM.parquet,40,5,175,180-265,-0.102654,215.0,-0.083792,0.007433
-400 mM,data/time-series/tmrm/400mM.parquet,40,5,175,180-265,-0.124333,260.0,-0.090796,-0.010395
-500 mM,data/time-series/tmrm/500mM.parquet,40,5,175,180-265,-0.170652,255.0,-0.141426,-0.01689
+control,data/time-series/tmrm/control.parquet,40,5,175,180-270,-0.008366,260.0,0.000587,0.00506
+200 mM,data/time-series/tmrm/200mM.parquet,40,5,175,180-270,-0.064102,215.0,-0.052921,0.001083
+300 mM,data/time-series/tmrm/300mM.parquet,40,5,175,180-270,-0.102654,215.0,-0.083792,0.007433
+400 mM,data/time-series/tmrm/400mM.parquet,40,5,175,180-270,-0.124333,260.0,-0.090796,-0.010395
+500 mM,data/time-series/tmrm/500mM.parquet,40,5,175,180-270,-0.170652,255.0,-0.141426,-0.01689
