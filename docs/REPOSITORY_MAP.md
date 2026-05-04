@@ -6,13 +6,23 @@ paper story.
 ## Root Files
 
 - `README.md`: the main navigation hub for the repository.
-- `manuscript.tex`, `main.tex`, and `Supporting_Information.tex`: manuscript and
-  supplement sources used as references for figure mapping. These files should
-  remain untouched.
-- `REFERENCES.bib`, `biophys-new.cls`, `biophysj.bst`, and `latexmkrc`:
-  manuscript build support files.
+- `latexmkrc`: LaTeX build configuration used by the manuscript.
 - `requirements.txt` and `environment.yml`: Python dependency lists for rerunning
   the maintained analyses.
+
+## `manuscript/`
+
+This folder contains the manuscript and supplement source files. Treat it as
+read-only.
+
+- `manuscript/manuscript.tex`: main manuscript LaTeX source.
+- `manuscript/Supporting_Information.tex`: supplement LaTeX source.
+- `manuscript/REFERENCES.bib`, `manuscript/biophys-new.cls`, and
+  `manuscript/biophysj.bst`: manuscript build support files (bibliography and
+  class definitions).
+- `manuscript/figures/`: publication figure artifacts. Do not edit, rename,
+  regenerate, or replace files in this folder during accessibility cleanup.
+  Code-generated panels are written under `outputs/figure-panels/` instead.
 
 ## `data/`
 
@@ -29,8 +39,16 @@ and image processing.
 - `data/time-series/cell-area/`: curated cell-area traces. These show how cell
   size changes during the osmotic shock.
 - `data/Osmolarity-readings/`: spreadsheet measurements of solution osmolarity.
-- `data/Viscosity/`: spreadsheet and CSV support data used to estimate how much
-  motor speed should change from fluid viscosity alone.
+- `data/Viscosity/`: viscosity support data organized by osmolyte. Contains two
+  subdirectories:
+  - `data/Viscosity/Sorb/`: sorbitol viscosity data. Each concentration
+    subfolder (200mM–500mM) holds a
+    `normalized-averages-from-sorb-motor-speeds.csv` file, and an
+    `Viscosity-measurments-calculations.xlsx` spreadsheet summarises all
+    concentrations.
+  - `data/Viscosity/Sucro/`: sucrose viscosity data. Identical layout to the
+    sorbitol folder with `normalized-averages-from-sucro-motor-speeds.csv` per
+    concentration and a matching xlsx spreadsheet.
 
 ## `code/`
 
@@ -47,21 +65,18 @@ It does not contain the upstream raw-video processing workflow.
 The folder names `TMRM-anaylsis` and `Cell-area-anaylsis` are retained to avoid
 path churn in the repository.
 
-## `figures/`
-
-This folder contains publication figure artifacts. Treat it as read-only. Do not
-edit, rename, regenerate, or replace files in this folder during accessibility
-cleanup. Code-generated panels that resemble manuscript panels are written under
-`outputs/figure-panels/` instead.
-
 ## `outputs/`
 
 This is now a committed results and reader-facing output folder. It contains:
 
-- regenerated analysis products from maintained scripts,
-- code-generated figure panels with manuscript-oriented filenames,
-- small CSV summaries for quick inspection,
-- plain-English captions and mapping tables.
+- `outputs/figure-panels/`: regenerated code-generated figure panels with
+  manuscript-oriented filenames (PDF).
+- `outputs/key-results/`: small CSV summaries and plain-English captions for
+  quick inspection without running code:
+  - `bead_trace_inventory.csv`, `cell_area_population_summary.csv`,
+    `tmrm_population_summary.csv`: per-experiment result tables.
+  - `figure_to_data_map.csv`: mapping of manuscript figures to source data files.
+  - `plain_english_captions.md`: human-readable figure captions.
 
 The canonical data remain in `data/`; `outputs/` helps readers understand and
 inspect the results without starting from code.
@@ -72,7 +87,6 @@ This folder contains explanatory guides:
 
 - `BIOLOGICAL_CONTEXT.md`: why the system and measurements matter.
 - `HOW_TO_READ_DATA.md`: column definitions, units, and transformations.
-- `FIGURES_AT_A_GLANCE.md`: figure-to-data and figure-to-code map.
 - `GLOSSARY.md`: plain-English definitions of technical terms.
 - `RERUN_GUIDE.md`: step-by-step instructions for running the analyses.
 - `bead-subsampling-analysis.md`: technical note on bead trace binning.
