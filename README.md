@@ -20,8 +20,6 @@ processed time-series data rather than raw videos or microscope image stacks.
   the organism, assays, controls, and main biological interpretation.
 - [How to read the data](docs/HOW_TO_READ_DATA.md): what each column means,
   what units are used, and how raw measurements were normalized.
-- [Figures at a glance](docs/FIGURES_AT_A_GLANCE.md): which data and code
-  support each main and supplemental figure.
 - [Repository map](docs/REPOSITORY_MAP.md): what each folder contains and why it
   exists.
 - [Glossary](docs/GLOSSARY.md): definitions of PMF, TMRM, osmolyte, tau, DFF,
