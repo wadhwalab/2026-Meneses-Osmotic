@@ -50,9 +50,6 @@ data. It is efficient for computation but less familiar than CSV.
 across the bacterial inner membrane. It powers the flagellar motor and other
 cellular processes.
 
-**SE / SEM, standard error of the mean**: A measure of uncertainty in a mean
-trace. It is often shown as a shaded band around a population-average line.
-
 **Shock period**: The time window when cells are exposed to the hyperosmotic
 medium.
 
