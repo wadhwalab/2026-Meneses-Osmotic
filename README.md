@@ -138,6 +138,14 @@ Notebook sections that depended on local upstream files or removed raw
 intermediates are marked as archived notes. The supported starting point remains
 the committed time-series data.
 
+## Citation
+
+If you use this code or data in your work, please cite the original article:
+
+> Meneses, Javi, Dudebout, Belser, Yang & Wadhwa (2026). Osmotic stress triggers
+> fast and reversible PMF collapse in *Escherichia coli*. *Biophysical Journal*.
+> https://doi.org/10.1016/S0006-3495(26)00280-8
+
 ## Validation
 
 Run the repository integrity checks with the same Python environment used for
