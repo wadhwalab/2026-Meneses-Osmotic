@@ -31,9 +31,6 @@ processed time-series data rather than raw videos or microscope image stacks.
 - [Outputs guide](outputs/README.md): code-generated figure panels and summary
   tables generated from the curated data.
 
-The manuscript files and everything under `figures/` are paper/reference
-artifacts. They should be treated as read-only and should not be edited as part
-of accessibility cleanup or analysis reruns.
 
 ## Repository Roadmap
 
@@ -42,17 +39,24 @@ of accessibility cleanup or analysis reruns.
 ├── code/                 # Python scripts and bead-analysis notebooks
 ├── data/                 # Curated time-series and supporting spreadsheet data
 ├── docs/                 # Plain-English guides and technical cleanup notes
-├── figures/              # Untouched publication figure artifacts
-├── outputs/              # Committed reader-facing outputs and regenerated results
-├── tests/                # Repository integrity checks
-├── manuscript.tex        # Manuscript source; reference only
-├── main.tex              # Manuscript source; reference only
-└── Supporting_Information.tex
+├── manuscript/           # LaTeX source and publication figures
+│   ├── figures/          
+│   ├── manuscript.tex
+│   ├── main.tex
+│   └── Supporting_Information.tex
+├── outputs/              # Code-generated outputs
+│   ├── figure-panels/    # figure panels
+│   └── key-results/      # Summary tables
+└── tests/                # Repository integrity checks
 ```
+
+Generated analysis intermediates (`outputs/bead/`, `outputs/cell-area/`,
+`outputs/tmrm/`) are excluded from version control and must be reproduced
+locally by running the maintained scripts.
 
 The data workflow begins at `data/time-series/`. Upstream image/video
 processing, bead-center detection, segmentation outputs, MATLAB figure files,
-and large acquisition files are outside the supported supplement workflow.
+and large acquisition files are not included.
 
 ## Main Data Types
 
