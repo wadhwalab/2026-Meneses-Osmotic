@@ -42,7 +42,6 @@ processed time-series data rather than raw videos or microscope image stacks.
 ├── manuscript/           # LaTeX source and publication figures
 │   ├── figures/          
 │   ├── manuscript.tex
-│   ├── main.tex
 │   └── Supporting_Information.tex
 ├── outputs/              # Code-generated outputs
 │   ├── figure-panels/    # figure panels
