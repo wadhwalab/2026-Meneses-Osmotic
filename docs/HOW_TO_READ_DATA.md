@@ -12,7 +12,7 @@ into tables of motor speed, fluorescence, or cell area over time.
 - `.csv`: plain text table that can be opened by most spreadsheet programs.
   These are used for manifests, processed outputs, and quick-look summaries.
 - `.xlsx`: spreadsheet files containing osmolarity and viscosity support data.
-- `.pdf`: figure files. The original paper figure artifacts live in `figures/`;
+- `.pdf`: figure files. The original paper figures live in `manuscript/figures/`;
   code-generated panel outputs live in `outputs/figure-panels/`.
 
 ## Bead Motor-Speed Data
@@ -20,8 +20,7 @@ into tables of motor speed, fluorescence, or cell area over time.
 Location: `data/time-series/bead/`
 
 These files contain the rotation speed of beads attached to bacterial flagellar
-motors. Faster rotation generally means stronger PMF; slower rotation means the
-motor has less energy available.
+motors.
 
 Each bead Parquet file has:
 
@@ -29,7 +28,7 @@ Each bead Parquet file has:
 |---|---|---|
 | `frame` | Original 300 Hz frame reference at the center of each time bin. | frame number |
 | `time_s` | Time after recording started. Use this as the main time axis. | seconds |
-| `cell1`, `cell2`, etc. | Rotation-frequency trace for one tethered cell/motor. | Hz, rotations per second |
+| `cell1`, `cell2`, etc. | Rotation-frequency trace for one cell/motor. | Hz, rotations per second |
 
 Important processing:
 
@@ -55,7 +54,7 @@ Metadata:
 | `rotation_direction` | Whether the motor was counterclockwise (`CCW`) or clockwise (`CW`). |
 | `fps` | Original acquisition rate. |
 | `source_kind` and `source_path` | Historical lineage of the curated trace. Raw upstream files are not included. |
-| `sign_adjustment` | Whether a trace direction was adjusted during curation. |
+| `sign_adjustment` | Whether a trace direction was adjusted during curation. Some speed data were originally sign-inverted due to the convention used in earlier analysis. |
 | `time_bin_s` | Width of the time bin used in the committed data. |
 | `reduction` | How each bin was summarized; here, a mean. |
 | `frame_reference_fps` | Frame-rate reference retained for compatibility. |
