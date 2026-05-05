@@ -119,7 +119,7 @@ def plot_multi_population(
             alpha=0.3,
         )
 
-    ax.axvspan(180, 265, color="lightgray", alpha=0.6)
+    ax.axvspan(180, 270, color="lightgray", alpha=0.6)
     ax.set_xlabel("Time (s)", fontsize=25)
     ax.set_ylabel("ΔF/F₀", fontsize=25)
     ticks = np.arange(-0.20, 0.10, 0.05)
